@@ -4,11 +4,11 @@ app:
   name: backend-api
   role: backend-api
   image: savivancofi/backend-api
-  tag: v1
+  tag: v1           # 👈 esta tag debe existir en Docker Hub
   replicas: 1
   containerPort: 8080
-  servicePort: 8080        # el Service expone el mismo puerto
-  createRoute: false       # backend-api NO necesita Route
+  servicePort: 8080
+  createRoute: false
 
 env:
   - name: ROLE
