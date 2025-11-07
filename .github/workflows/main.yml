@@ -1,0 +1,64 @@
+name: Build-and-Deploy-Backend-API
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: vars
+        run: echo "TAG=v1" >> $GITHUB_ENV
+        # 👆 Usa aquí la misma tag que pusiste en helm/values.yaml
+
+      # 1️⃣ Login a Docker Hub
+      - name: Login to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          echo "${DOCKERHUB_TOKEN}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+
+      # 2️⃣ Build + push de la imagen
+      - name: Build and push Docker image
+        run: |
+          docker build -t savivancofi/backend-api-comments:${{ env.TAG }} .
+          docker push savivancofi/backend-api-comments:${{ env.TAG }}
+
+      # 3️⃣ Instalar OC CLI
+      - name: Install OC CLI
+        run: |
+          curl -L https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz -o oc.tar.gz
+          tar -xzf oc.tar.gz
+          sudo mv oc /usr/local/bin/oc
+          oc version
+
+      # 4️⃣ Instalar Helm
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+          helm version
+
+      # 5️⃣ Login en OpenShift
+      - name: Log in to OpenShift
+        run: |
+          oc login ${{ secrets.OPENSHIFT_SERVER }} \
+            --token=${{ secrets.OPENSHIFT_TOKEN }} \
+            --insecure-skip-tls-verify=true
+          oc project ${{ secrets.OPENSHIFT_NAMESPACE }}
+
+      # 6️⃣ Desplegar con Helm usando TU values.yaml del repo
+      - name: Deploy backend-api with Helm
+        run: |
+          helm upgrade --install backend-api \
+            oci://registry-1.docker.io/savivancofi/mi-chart \
+            --version 0.1.0 \
+            --namespace ${{ secrets.OPENSHIFT_NAMESPACE }} \
+            --values helm/values.yaml
