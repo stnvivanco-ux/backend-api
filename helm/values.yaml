@@ -1,0 +1,17 @@
+namespace: stnvivanco92-dev
+
+app:
+  name: backend-api
+  role: backend-api
+  image: savivancofi/backend-api
+  tag: v1
+  replicas: 1
+  containerPort: 8080
+  servicePort: 8080        # el Service expone el mismo puerto
+  createRoute: false       # backend-api NO necesita Route
+
+env:
+  - name: ROLE
+    value: backend-api
+  - name: BACKEND_DATA_URL
+    value: "http://backend-data-svc:8081/mensaje"
