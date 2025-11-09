@@ -14,4 +14,4 @@ env:
   - name: ROLE
     value: backend-api
   - name: BACKEND_DATA_URL
-    value: "http://backend-data-svc:8081/mensaje"
+    value: "http://backend-data-svc:8080"
