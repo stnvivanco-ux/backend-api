@@ -29,8 +29,8 @@ jobs:
       # 2️⃣ Build + push de la imagen
       - name: Build and push Docker image
         run: |
-          docker build -t savivancofi/backend-api-comments:${{ env.TAG }} .
-          docker push savivancofi/backend-api-comments:${{ env.TAG }}
+          docker build -t savivancofi/backend-api:${{ env.TAG }} .
+          docker push savivancofi/backend-api:${{ env.TAG }}
 
       # 3️⃣ Instalar OC CLI
       - name: Install OC CLI
