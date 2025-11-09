@@ -15,7 +15,7 @@ jobs:
 
       - name: Set image tag
         id: vars
-        run: echo "TAG=v1" >> $GITHUB_ENV
+        run: echo "TAG=v2" >> $GITHUB_ENV
         # 👆 Usa aquí la misma tag que pusiste en helm/values.yaml
 
       # 1️⃣ Login a Docker Hub

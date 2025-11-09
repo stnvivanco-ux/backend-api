@@ -4,7 +4,7 @@ app:
   name: backend-api
   role: backend-api
   image: savivancofi/backend-api
-  tag: v1           # 👈 esta tag debe existir en Docker Hub
+  tag: v2           # 👈 esta tag debe existir en Docker Hub
   replicas: 1
   containerPort: 8080
   servicePort: 8080
