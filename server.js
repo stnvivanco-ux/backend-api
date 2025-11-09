@@ -4,11 +4,13 @@ const http = require('http');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// URL del backend-data, desde variable de entorno o por defecto
+// Usamos la URL del backend-data desde la variable de entorno
 const BACKEND_DATA_URL = process.env.BACKEND_DATA_URL || 'http://backend-data-svc:8080';
 
 app.get('/mensaje', (req, res) => {
   const url = `${BACKEND_DATA_URL}/mensaje`;
+
+  console.log('Llamando a backend-data en:', url);
 
   http.get(url, (resp) => {
     let data = '';
@@ -17,7 +19,7 @@ app.get('/mensaje', (req, res) => {
     resp.on('end', () => {
       try {
         const json = JSON.parse(data);
-        // Reenviamos el texto que vino de backend-data / base de datos
+        // Reenviamos el texto que vino de backend-data (que a su vez viene de la BD)
         res.json({ texto: json.texto });
       } catch (e) {
         console.error('Error parseando respuesta de backend-data:', e);
