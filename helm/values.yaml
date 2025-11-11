@@ -4,14 +4,12 @@ app:
   name: backend-api
   role: backend-api
   image: savivancofi/backend-api
-  tag: v2           # 👈 esta tag debe existir en Docker Hub
+  tag: v1
   replicas: 1
   containerPort: 8080
   servicePort: 8080
   createRoute: false
 
-env:
-  - name: ROLE
-    value: backend-api
-  - name: BACKEND_DATA_URL
-    value: "http://backend-data-svc:8080"
+envFrom:
+  - configMapRef:
+      name: backend-api-config
